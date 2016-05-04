@@ -7,7 +7,6 @@ import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 import com.niharg.joketeller.backend.myApi.MyApi;
-import com.niharg.joketeller.backend.myApi.model.Joke;
 
 import java.io.IOException;
 
@@ -52,6 +51,7 @@ public class FetchJokeTask extends AsyncTask<FetchJokeTask.Receiver, Void, Strin
     @Override
     protected void onPostExecute(String s) {
             receiver.receiveJoke(s);
+
     }
 
     public interface Receiver {
