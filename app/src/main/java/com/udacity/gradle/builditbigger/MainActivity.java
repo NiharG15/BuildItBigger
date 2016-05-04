@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.niharg.jokedisplay.JokeDisplayActivity;
 import com.niharg.jokelib.JokeLib;
+import com.niharg.joketeller.backend.myApi.MyApi;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -43,12 +44,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    public void tellJoke(View view){
-        Intent intent = new Intent(this, JokeDisplayActivity.class);
-        intent.putExtra(JokeDisplayActivity.EXTRA_JOKE, JokeLib.getJoke());
-        startActivity(intent);
-    }
-
 
 }
