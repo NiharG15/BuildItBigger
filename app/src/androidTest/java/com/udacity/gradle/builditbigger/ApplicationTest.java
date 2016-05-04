@@ -2,6 +2,7 @@ package com.udacity.gradle.builditbigger;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
+import android.util.Log;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 public class ApplicationTest extends ApplicationTestCase<Application> implements FetchJokeTask.Receiver {
 
     private CountDownLatch latch;
+    private String joke;
 
     public ApplicationTest() {
         super(Application.class);
@@ -23,6 +25,9 @@ public class ApplicationTest extends ApplicationTestCase<Application> implements
         task.execute(this);
         try {
             latch.await(30, TimeUnit.SECONDS);
+            Log.d("Unit Test", String.valueOf(latch.getCount()));
+            assertNotNull(joke);
+            assertFalse(joke.length() == 0);
         } catch (InterruptedException e) {
             e.printStackTrace();
             fail("Timer timed out.");
@@ -31,8 +36,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> implements
 
     @Override
     public void receiveJoke(String joke) {
-        assertNotNull(joke);
-        assertFalse(joke.length() == 0);
+        this.joke = joke;
         latch.countDown();
     }
 }
