@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -23,6 +24,7 @@ public class MainActivityFragment extends Fragment implements FetchJokeTask.Rece
 
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+    private ProgressBar mProgressBar;
 
     public MainActivityFragment() {
     }
@@ -33,6 +35,7 @@ public class MainActivityFragment extends Fragment implements FetchJokeTask.Rece
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
         mAdView = (AdView) root.findViewById(R.id.adView);
+        mProgressBar = (ProgressBar) root.findViewById(R.id.progress);
         // Create an ad request. Check logcat output for the hashed device ID to
         // get test ads on a physical device. e.g.
         // "Use AdRequest.Builder.addTestDevice("ABCDEF012345") to get test ads on this device."
@@ -77,6 +80,7 @@ public class MainActivityFragment extends Fragment implements FetchJokeTask.Rece
     }
 
     public void tellJoke(){
+        mProgressBar.setVisibility(View.VISIBLE);
         FetchJokeTask task = new FetchJokeTask();
         task.execute(this);
     }
@@ -101,6 +105,7 @@ public class MainActivityFragment extends Fragment implements FetchJokeTask.Rece
 
     @Override
     public void receiveJoke(String joke) {
+        mProgressBar.setVisibility(View.GONE);
         Intent intent = new Intent(getActivity(), JokeDisplayActivity.class);
         intent.putExtra(JokeDisplayActivity.EXTRA_JOKE, joke);
         startActivity(intent);
