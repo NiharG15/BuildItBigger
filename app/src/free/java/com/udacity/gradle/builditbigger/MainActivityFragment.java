@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.niharg.jokedisplay.JokeDisplayActivity;
 import com.niharg.jokelib.JokeLib;
 
@@ -20,6 +22,7 @@ import com.niharg.jokelib.JokeLib;
 public class MainActivityFragment extends Fragment implements FetchJokeTask.Receiver {
 
     private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     public MainActivityFragment() {
     }
@@ -38,17 +41,40 @@ public class MainActivityFragment extends Fragment implements FetchJokeTask.Rece
                 .build();
         mAdView.loadAd(adRequest);
 
+        mInterstitialAd = new InterstitialAd(getActivity());
+        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                requestNewInterstitial();
+                tellJoke();
+            }
+        });
+
+        requestNewInterstitial();
+
         Button mButton = (Button) root.findViewById(R.id.button);
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tellJoke();
+                if(mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                } else {
+                    tellJoke();
+                }
             }
         });
 
         return root;
     }
 
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder().
+                addTestDevice("E7088CF460B63486361925571D51F87C")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
+    }
 
     public void tellJoke(){
         FetchJokeTask task = new FetchJokeTask();
